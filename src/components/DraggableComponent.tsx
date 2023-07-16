@@ -19,6 +19,7 @@ const DraggableImage = styled.img`
   z-index: 1;
   left: 20px;
   top: 20px;
+  overflow: hidden
 `;
 
 const ImageWithRef = React.forwardRef<HTMLImageElement, React.ComponentPropsWithoutRef<'img'>>((props, ref) => {
@@ -32,8 +33,36 @@ const ImageWithRef = React.forwardRef<HTMLImageElement, React.ComponentPropsWith
 const DraggableComponent: React.FC<DraggableComponentProps> = ( {image} ) => {
     
     const [position, setPosition] = useState({ x: 0, y: 0 });
+    const [move, setMove] = useState(false);
     const elementRef = useRef<HTMLImageElement>(null);
-  
+
+    const preventBackgroundScroll = (event) => {
+      event.preventDefault();
+    };
+
+    // useEffect(() => {
+    //   if(move) {
+    //   document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
+    //   } else {
+    //     document.removeEventListener('touchmove', preventBackgroundScroll)
+    //   }
+    //   // return () => {
+    //   //   backgroundElement.removeEventListener('touchmove', preventBackgroundScroll);
+    //   // };
+    // }, [move]);
+    
+    const OnTouchStart = () =>
+    {
+      // setMove(true)
+      document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
+    }
+
+    const onTouchEnd = () =>
+    {
+      // setMove(false)
+      document.removeEventListener('touchmove', preventBackgroundScroll)
+    }
+
     const onMouseDown = useCallback((event) => {
       event.persist();
       if (event.nativeEvent instanceof MouseEvent) {
@@ -55,6 +84,7 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ( {image} ) => {
         document.addEventListener("mousemove", onMouseMove);
         document.addEventListener("mouseup", onMouseUp);
       } else if (event.nativeEvent instanceof TouchEvent) {
+        
         const onTouchMove = (event: TouchEvent) => {
           const touch = event.touches[0];
           const {left, top, width, height} =  elementRef.current.getBoundingClientRect();
@@ -70,7 +100,8 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ( {image} ) => {
           }
           setPosition(position);
         };
-  
+      
+
         const onTouchEnd = () => {
           document.removeEventListener("touchmove", onTouchMove);
           document.removeEventListener("touchend", onTouchEnd);
@@ -82,10 +113,10 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ( {image} ) => {
     }, [position, setPosition, elementRef]);
   
     return (
-      <Container>
-        <ImageWithRef ref={elementRef} onMouseDown={onMouseDown} onTouchMove={onMouseDown} src={image}>
+      // <Container>
+        <ImageWithRef ref={elementRef} onMouseDown={onMouseDown} onTouchMove={onMouseDown} onTouchStart={OnTouchStart} onTouchEnd={onTouchEnd} src={image} >
         </ImageWithRef>
-      </Container>
+      // </Container>
     );
   };
   
