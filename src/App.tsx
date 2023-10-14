@@ -42,16 +42,16 @@ function App() {
     <div>
       <Image src={house1} alt="Your Image" />
       <DraggableComponent image={per1} />
-      <DraggableComponent image={per2}/>
+      {/* <DraggableComponent image={per2}/>
       <DraggableComponent image={per3}/>
       <DraggableComponent image={per4}/>
       <DraggableComponent image={per5}/>
-      <DraggableComponent image={per6}/>
+      <DraggableComponent image={per6}/> */}
       <DraggableComponent image={f1}/>
-      <DraggableComponent image={f2}/>
+      {/* <DraggableComponent image={f2}/>
       <DraggableComponent image={f3}/>
       <DraggableComponent image={f4}/>
-      <DraggableComponent image={f5}/>
+      <DraggableComponent image={f5}/> */}
     </div>
     
   );

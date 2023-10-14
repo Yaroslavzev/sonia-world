@@ -1,7 +1,7 @@
 import React from 'react';
-import { useRef, useState, useEffect, useCallback } from 'react'
+import { useRef, useState, useId, useEffect, useCallback } from 'react'
 import styled, { css } from "styled-components/macro";
-
+import ImageOverlapDetectorService from '../services/ImageOverlapDetectorService';
 import myImage from '../assets/Skype_Picture_2023_06_10T12_00_26_662Z.jpeg';
 import tatiana from '../assets/small.png';
 
@@ -23,7 +23,9 @@ const DraggableImage = styled.img`
 `;
 
 const ImageWithRef = React.forwardRef<HTMLImageElement, React.ComponentPropsWithoutRef<'img'>>((props, ref) => {
-    return <DraggableImage ref={ref} {...props} />;
+    const id = useId();
+
+    return <DraggableImage ref={ref} id={id} {...props} />;
   });
 
   interface DraggableComponentProps {
@@ -35,6 +37,7 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ( {image} ) => {
     const [position, setPosition] = useState({ x: 0, y: 0 });
     const [move, setMove] = useState(false);
     const elementRef = useRef<HTMLImageElement>(null);
+
 
     const preventBackgroundScroll = (event) => {
       event.preventDefault();
@@ -53,14 +56,22 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ( {image} ) => {
     
     const OnTouchStart = () =>
     {
+      
       // setMove(true)
       document.addEventListener('touchmove', preventBackgroundScroll, { passive: false });
     }
 
-    const onTouchEnd = () =>
+    const onTouchEnd = (event) =>
     {
+      // console.log("kek")
+      debugger
+      console.log(event.target.id)
+      const listImages = document.querySelectorAll('img[id]')
+      // debugger;
       // setMove(false)
       document.removeEventListener('touchmove', preventBackgroundScroll)
+
+      ImageOverlapDetectorService(event.target, listImages)
     }
 
     const onMouseDown = useCallback((event) => {
