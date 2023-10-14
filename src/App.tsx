@@ -30,22 +30,28 @@ const ScrollContainer = styled.div`
 `;
 
 const Image = styled.img`
+  // position: absolute;
   width: 2700px;
-  overflow: hidden;
+  // overflow: auto;
+  // overflow: hidden;
 `;
 
+const Body = styled.div`
+  // position: fixed;
+  // pointer-events: none
+`
 function App() {
   const draggableImages = ImagesContainer.map((image) => {
     return <DraggableComponent imageContainer={image} key={image.id} />
   });
 
   return (
-    <div>
+    <Body>
       <Image src={house1} alt="Your Image" />
       <Container id={'bad'} />
       <Container2 id={'bad'} />
       {draggableImages}
-    </div>
+    </Body>
 
   );
 }
