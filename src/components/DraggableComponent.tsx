@@ -31,17 +31,9 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ imageContainer 
 
 
   const preventBackgroundScroll = (event) => {
+    // remove ?
     // event.stopPropagation();
     // document.documentElement.style.overflow = 'hidden';
-    // const { left, top, width, height } = elementRef.current.getBoundingClientRect();
-    // const centerX = left + width / 2;
-    // const centerY = top + height / 2;
-
-    // position.x = centerX;
-    // position.y = centerY;
-
-    // setPosition(position);
-    // event.preventDefault();
   };
 
   const onPointerDown = () => {
@@ -50,9 +42,7 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ imageContainer 
   }
 
   const onPointerUp = (event) => {
-    const listImages = document.querySelectorAll('img[id]')
-
-    const overlapedImageArray = ImageOverlapDetectorService(event.target, listImages)
+    const overlapedImageArray = ImageOverlapDetectorService(event.target)
     const imageContainer = ImagesContainer.find((container) => container.id === event.target.id);
     if (imageContainer) {
       const imageActions = imageContainer.actions.find((action) => action.object === overlapedImageArray[0]);
@@ -77,9 +67,8 @@ const DraggableComponent: React.FC<DraggableComponentProps> = ({ imageContainer 
     position.x += touch.clientX - centerX;
     position.y += touch.clientY - centerY;
     const element = elementRef.current;
-    if (element) {
-      element.style.transform = `translate(${position.x}px, ${position.y}px)`;
-    }
+
+    element.style.transform = `translate(${position.x}px, ${position.y}px)`;
     setPosition(position);
   };
 

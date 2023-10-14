@@ -1,15 +1,24 @@
-const ImageOverlapDetectorService = (event, images) => {
-  const checkOverlap = (event, images) => {
-    const referenceImage = event
-    const referenceRect = event.getBoundingClientRect();
+const ImageOverlapDetectorService = (event) => {
+  const listImages = document.querySelectorAll('img[id]')
+
+  const checkOverlap = (event, listImages) => {
+    const currentImage = event
+    const currentRect = event.getBoundingClientRect();
     const interseptedImagesIds = [];
 
-    images.forEach(image => {
-      if (image.id !== referenceImage.id) {
+    listImages.forEach(image => {
+      if (image.id !== currentImage.id) {
         const rect = image.getBoundingClientRect();
+        const intersectionWidth = Math.max(0, Math.min(currentRect.right, rect.right) - Math.max(currentRect.left, rect.left));
+        const intersectionHeight = Math.max(0, Math.min(currentRect.bottom, rect.bottom) - Math.max(currentRect.top, rect.top));
+        const intersectionArea = intersectionWidth * intersectionHeight;
+        const area1 = (currentRect.right - currentRect.left) * (currentRect.bottom - currentRect.top);
+        const area2 = (rect.right - rect.left) * (rect.bottom - rect.top);
+        const percentage1 = intersectionArea / area1;
+        const percentage2 = intersectionArea / area2;
+        const max = Math.max(percentage1, percentage2);
         if (
-          (referenceRect.left >= rect.left && referenceRect.left <= rect.right) ||
-          (referenceRect.right >= rect.left && referenceRect.right <= rect.right)
+          max > 0.5
         ) {
           interseptedImagesIds.push(image.id);
         }
@@ -20,7 +29,7 @@ const ImageOverlapDetectorService = (event, images) => {
     return interseptedImagesIds;
   };
 
-  return checkOverlap(event, images)
+  return checkOverlap(event, listImages)
 };
 
 export default ImageOverlapDetectorService;
